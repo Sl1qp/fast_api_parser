@@ -2,7 +2,6 @@ FROM python:3.12-alpine
 
 WORKDIR /app
 
-# Устанавливаем зависимости для сборки
 RUN apk add --no-cache gcc musl-dev postgresql-dev
 
 COPY requirements.txt ./tmp/requirements.txt

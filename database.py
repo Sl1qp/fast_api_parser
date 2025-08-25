@@ -42,6 +42,7 @@ __all__ = [
     'get_last_trading_results'
 ]
 
+
 async def init_db():
     global async_engine, async_session_maker
     async_engine = create_async_engine(DATABASE_URL, pool_pre_ping=True)

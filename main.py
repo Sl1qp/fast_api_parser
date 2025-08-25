@@ -15,7 +15,6 @@ from parser.parser import run_parser
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Контекстный менеджер для управления жизненным циклом приложения"""
     # Инициализация при запуске
     print("Инициализация приложения...")
     await init_db()
@@ -56,7 +55,6 @@ app.add_middleware(
 async def refresh_data(session: AsyncSession = Depends(db.get_async_session)):
     await db.truncate_table(session)
     await run_parser()
-
 
     redis = FastAPICache.get_backend().redis
     await redis.flushall()

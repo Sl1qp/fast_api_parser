@@ -23,17 +23,14 @@ def get_cache_expiration():
     now = datetime.now()
     target_time = time(14, 11)  # 14:11
 
-    # Если сейчас до 14:11, то кэшируем до сегодняшних 14:11
     if now.time() < target_time:
         expiration_time = datetime.combine(now.date(), target_time)
     else:
-        # Если сейчас после 14:11, то кэшируем до 14:11 следующего дня
         expiration_time = datetime.combine(now.date() + timedelta(days=1), target_time)
 
     return int((expiration_time - now).total_seconds())
 
 
-# Кастомный декоратор кэширования с автоматическим сбросом в 14:11
 def cache_until_1411():
     return cache(expire=get_cache_expiration())
 
@@ -44,17 +41,14 @@ async def clear_cache_daily():
         now = datetime.now()
         target_time = time(14, 11)
 
-        # Вычисляем время до следующего сброса кэша
         if now.time() < target_time:
             wait_until = datetime.combine(now.date(), target_time)
         else:
             wait_until = datetime.combine(now.date() + timedelta(days=1), target_time)
 
-        # Ждем до времени сброса
         wait_seconds = (wait_until - now).total_seconds()
         await asyncio.sleep(wait_seconds)
 
-        # Очищаем кэш
         redis = FastAPICache.get_backend().redis
         await redis.flushall()
         print(f"Кэш очищен в {datetime.now()}")

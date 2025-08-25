@@ -12,7 +12,7 @@ router = APIRouter(prefix="/trades", tags=["trades"])
 
 
 @router.get("/dates/", response_model=TradingDatesResponse)
-@cache_until_1411()  # Добавляем кэширование
+@cache_until_1411()
 async def get_last_trading_dates(
         limit: int = Query(10, ge=1, le=100, description="Количество последних торговых дней"),
         session: AsyncSession = Depends(get_async_session)
@@ -37,7 +37,7 @@ async def get_last_trading_dates(
 
 
 @router.get("/dynamics/", response_model=List[TradingResultResponse])
-@cache_until_1411()  # Добавляем кэширование
+@cache_until_1411()
 async def get_dynamics(
         oil_id: Optional[str] = Query(None, description="Код нефтепродукта (например: A100)"),
         delivery_type_id: Optional[str] = Query(None, description="Тип поставки (например: E, T)"),
@@ -87,7 +87,7 @@ async def get_dynamics(
 
 
 @router.get("/results/", response_model=List[TradingResultResponse])
-@cache_until_1411()  # Добавляем кэширование
+@cache_until_1411()
 async def get_trading_results(
         oil_id: Optional[str] = Query(None, description="Код нефтепродукта (например: A100)"),
         delivery_type_id: Optional[str] = Query(None, description="Тип поставки (например: E, T)"),
