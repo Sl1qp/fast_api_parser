@@ -2,6 +2,7 @@ import database as db
 import asyncio
 
 from fastapi import FastAPI
+from fastapi_cache import FastAPICache
 from fastapi.params import Depends
 from fastapi.middleware.cors import CORSMiddleware
 from cache import init_redis, clear_cache_daily
