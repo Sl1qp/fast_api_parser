@@ -1,0 +1,60 @@
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from fastapi_cache.decorator import cache
+from redis import asyncio as aioredis
+from datetime import datetime, time, timedelta
+import asyncio
+from config import REDIS_HOST, REDIS_PORT, REDIS_DB
+
+
+async def init_redis():
+    """Инициализация Redis подключения"""
+    redis = aioredis.from_url(
+        f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}",
+        encoding="utf8",
+        decode_responses=True
+    )
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+    return redis
+
+
+def get_cache_expiration():
+    """Вычисляет время до 14:11 следующего дня"""
+    now = datetime.now()
+    target_time = time(14, 11)  # 14:11
+
+    # Если сейчас до 14:11, то кэшируем до сегодняшних 14:11
+    if now.time() < target_time:
+        expiration_time = datetime.combine(now.date(), target_time)
+    else:
+        # Если сейчас после 14:11, то кэшируем до 14:11 следующего дня
+        expiration_time = datetime.combine(now.date() + timedelta(days=1), target_time)
+
+    return int((expiration_time - now).total_seconds())
+
+
+# Кастомный декоратор кэширования с автоматическим сбросом в 14:11
+def cache_until_1411():
+    return cache(expire=get_cache_expiration())
+
+
+async def clear_cache_daily():
+    """Фоновая задача для очистки кэша в 14:11"""
+    while True:
+        now = datetime.now()
+        target_time = time(14, 11)
+
+        # Вычисляем время до следующего сброса кэша
+        if now.time() < target_time:
+            wait_until = datetime.combine(now.date(), target_time)
+        else:
+            wait_until = datetime.combine(now.date() + timedelta(days=1), target_time)
+
+        # Ждем до времени сброса
+        wait_seconds = (wait_until - now).total_seconds()
+        await asyncio.sleep(wait_seconds)
+
+        # Очищаем кэш
+        redis = FastAPICache.get_backend().redis
+        await redis.flushall()
+        print(f"Кэш очищен в {datetime.now()}")
