@@ -8,10 +8,10 @@ from database import get_async_session, spimex_trading_results
 from schemas import TradingResultResponse, TradingDatesResponse
 from cache import cache_until_1411
 
-router = APIRouter(prefix="/api", tags=["trades"])
+trades_router = APIRouter(prefix="/api", tags=["trades"])
 
 
-@router.get("/get_last_trading_dates/", response_model=TradingDatesResponse)
+@trades_router.get("/get_last_trading_dates/", response_model=TradingDatesResponse)
 @cache_until_1411()
 async def get_last_trading_dates(
         limit: int = Query(10, ge=1, le=100, description="Количество последних торговых дней"),
@@ -36,7 +36,7 @@ async def get_last_trading_dates(
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
 
-@router.get("/get_dynamics/", response_model=List[TradingResultResponse])
+@trades_router.get("/get_dynamics/", response_model=List[TradingResultResponse])
 @cache_until_1411()
 async def get_dynamics(
         oil_id: Optional[str] = Query(None, description="Код нефтепродукта (например: A100)"),
@@ -86,7 +86,7 @@ async def get_dynamics(
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
 
-@router.get("/get_trading_results/", response_model=List[TradingResultResponse])
+@trades_router.get("/get_trading_results/", response_model=List[TradingResultResponse])
 @cache_until_1411()
 async def get_trading_results(
         oil_id: Optional[str] = Query(None, description="Код нефтепродукта (например: A100)"),
