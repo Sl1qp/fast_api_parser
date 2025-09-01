@@ -4,4 +4,4 @@ from fastapi import APIRouter
 
 main_router = APIRouter()
 main_router.include_router(trades_router, tags=["trades"])
-main_router.include_router(refresh_router, tags=["refresh"])
+main_router.include_router(refresh_router, tags=["update data"])

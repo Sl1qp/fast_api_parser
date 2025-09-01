@@ -9,7 +9,7 @@ from parser.parser import run_parser
 refresh_router = APIRouter()
 
 
-@refresh_router.delete("/", tags=["update data"],
+@refresh_router.delete("/",
                        description="Эндпоинт для обновления данных. База данных будет очищена и будет запущен парсер для актуализации данных. Обновление данных в среднем занимает 3-5 минут")
 async def refresh_data(session: AsyncSession = Depends(db.get_async_session)):
     await db.truncate_table(session)
