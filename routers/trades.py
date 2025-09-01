@@ -14,7 +14,7 @@ trades_router = APIRouter(prefix="/api", tags=["trades"])
 @trades_router.get("/get_last_trading_dates/", response_model=TradingDatesResponse)
 @cache_until_1411()
 async def get_last_trading_dates(
-        limit: int = Query(10, ge=1, le=100, description="Количество последних торговых дней"),
+        limit: int = Query(7, ge=1, le=100, description="Количество последних торговых дней"),
         session: AsyncSession = Depends(get_async_session)
 ):
     """

@@ -9,6 +9,8 @@ services:
       - DB_NAME=EM2_2dz
       - DB_USER=postgres
       - DB_PASS=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - DEBUG = True
       - LOG_LEVEL = DEBUG
     env_file:
