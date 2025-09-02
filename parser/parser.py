@@ -136,10 +136,12 @@ async def create_and_save_data(session, filtered_td, trade_date, table_name):
     print(f'[ database ] The file {table_name[12:]} saved successfully!')
 
 
-async def run_parser():
+async def run_parser(stopper_threshold=15, max_pages=None):
     stopper = 0
     page = 0
     while True:
+        if max_pages is not None and page >= max_pages:
+            break
         print(f'----------------- Downloading page {page} -----------------')
         table_urls = await get_tables_urls(page)
 
@@ -156,7 +158,7 @@ async def run_parser():
         results = await asyncio.gather(*tasks_for_parse)
 
         stopper += results.count(False)
-        if stopper > 15:
+        if stopper >= stopper_threshold:
             break
 
         print('-----------------------------------------------------------\n')

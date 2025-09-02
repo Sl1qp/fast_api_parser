@@ -15,9 +15,10 @@ class TradingResultResponse(BaseModel):
     count: int = Field(..., description="Количество договоров, шт.")
     trade_date: date = Field(..., description="Дата торгов", alias="date")
 
-    class Config:
-        from_attributes = True
-        populate_by_name = True
+    model_config = {
+        "from_attributes": True,
+        "populate_by_name": True
+    }
 
 
 class TradingDatesResponse(BaseModel):

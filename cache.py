@@ -1,3 +1,5 @@
+import os
+
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
@@ -7,8 +9,17 @@ import asyncio
 from config import REDIS_HOST, REDIS_PORT, REDIS_DB
 
 
+
+TESTING = os.getenv("TESTING", "False").lower() == "true"
+
+
 async def init_redis():
     """Инициализация Redis подключения"""
+    if TESTING:
+        # В тестовом режиме используем InMemoryBackend
+        from fastapi_cache.backends.inmemory import InMemoryBackend
+        FastAPICache.init(InMemoryBackend())
+        return None
     redis = aioredis.from_url(
         f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}",
         encoding="utf8",
@@ -32,6 +43,11 @@ def get_cache_expiration():
 
 
 def cache_until_1411():
+    if TESTING:
+        # В тестовом режиме возвращаем пустой декоратор
+        def dummy_decorator(func):
+            return func
+        return dummy_decorator
     return cache(expire=get_cache_expiration())
 
 

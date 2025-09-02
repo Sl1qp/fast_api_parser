@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession, AsyncEngine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy import select, func, distinct, and_
 from sqlalchemy import text, Text, Integer, Float, DateTime, Date, Column
 from typing import List, Optional, AsyncGenerator
