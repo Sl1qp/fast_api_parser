@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.test
     environment:
       - DB_HOST=test_db
-      - DB_NAME=test_EM2_2dz
+      - DB_NAME=test_db_name
       - DB_USER=postgres
       - DB_PASS=postgres
       - DB_PORT=5432
@@ -24,7 +24,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: test_EM2_2dz
+      POSTGRES_DB: test_db_name
 
   test_redis:
     image: redis:7-alpine
